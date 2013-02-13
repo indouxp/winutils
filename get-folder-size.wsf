@@ -1,0 +1,33 @@
+<package>
+  <Job id="get-folder-size">
+    <runtime>
+      <description>
+      </description>
+    </runtime>
+    <?job debug="true"?>
+    <Script language="JScript">
+			var SLEEP_MSEC = 1000;
+      var obj_w_shell = WScript.CreateObject("WScript.shell");
+      var obj_fso = WScript.CreateObject("Scripting.FileSystemObject");
+			var obj_folder;
+			var str_line;
+			var int_size;
+			var str_size;
+			var cmd = "%comspec% /c dir /ad /s /b " + WScript.Arguments(0);
+			var obj_exec = obj_w_shell.Exec(cmd);
+      while (!obj_exec.StdOut.AtEndOfStream) {
+        str_line = obj_exec.StdOut.Readline();
+        obj_folder = obj_fso.getFolder(str_line);
+        int_size = obj_folder.Size;
+				str_size = int_size.toString();
+				for (i = str_size.length; i <= 10; i++) {
+					str_size = "0" + str_size;
+				}
+				WScript.Echo(str_size + ":" + str_line);
+      }
+      while (!obj_exec.StdErr.AtEndOfStream) {
+      	WScript.Sleep(SLEEP_MSEC);
+      }
+    </Script>
+  </Job>
+</package>
